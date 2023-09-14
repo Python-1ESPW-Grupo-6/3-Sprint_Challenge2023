@@ -3,9 +3,9 @@
 
 import sys
 
-chuva_hoje = 12
+chuva_hoje = 8
 
-# 9 14 8 15 12 7 13 11 9 10
+bueiro_entupido = True
 
 # Dicionário que associa bairros a meses de risco de alagamento
 bairros_alagados = {
@@ -51,7 +51,14 @@ def consultar_bairro(bairro_user):
         bairro_user (str): O nome do bairro a ser consultado.
     """
     if bairro_user in bairros_alagados:
-        if bairros_alagados[bairro_user] >= chuva_hoje:
+        if bairros_alagados[bairro_user] <= chuva_hoje:
+            print('')
+            traco()
+            print(f'O bairro {bairro_user} VAI ALAGAR hoje devido a fortes chuvas. Tome cuidado e evite a região!')
+            traco()
+            print('')
+            bairro_pesquisados_alagados.append(bairro_user)
+        elif (bairros_alagados[bairro_user]*0.75) <= chuva_hoje and bueiro_entupido == True:
             print('')
             traco()
             print(f'O bairro {bairro_user} VAI ALAGAR hoje devido a fortes chuvas. Tome cuidado e evite a região!')
