@@ -1,31 +1,38 @@
 #lista de bairros que tendem a alagar em época de chuva intesa (verão)
 # https://imoveis.estadao.com.br/noticias/saiba-quais-sao-os-bairros-mais-suscetiveis-a-enchentes-e-alagamentos-em-sao-paulo/
 
+# Fabrício Saavedra - 97631
+# Guilherme Akio - 98582
+# Guilherme Morais - 551981
+# Matheus Motta - 550352
+# Vinicius Buzato - 99125
+
+
 import sys
 
-# Dados de meses de chuva intensa para consulta
-meses_temporal = ['Dezembro', 'Janeiro', 'Fevereiro', 'Março']
+# Variável para inserir manualmente um valor de pluviosidade previsto par o dia
+chuva_hoje = 8
 
-# Dados de outros meses para consulta
-demais_meses = ['Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro']
+# Variável para inserir manualmente a leitura realizada por um sensor físico em um bueiro
+bueiro_entupido = True
 
 # Dicionário que associa bairros a meses de risco de alagamento
 bairros_alagados = {
-    'Mooca': meses_temporal,
-    'Vila Prudente': meses_temporal,
-    'Tatuapé': meses_temporal,
-    'Belenzinho': meses_temporal,
-    'Bela Vista': meses_temporal,
-    'Casa Verde': meses_temporal,
-    'Vila Leopoldina': meses_temporal,
-    'Cidade Jardim': meses_temporal,
-    'Chácara Santo Antônio': meses_temporal,
-    'Capão Redondo': meses_temporal
+    'Mooca': 9,
+    'Vila Prudente': 14,
+    'Tatuapé': 8,
+    'Belenzinho': 15,
+    'Bela Vista': 12,
+    'Casa Verde': 7,
+    'Vila Leopoldina': 13,
+    'Cidade Jardim': 11,
+    'Chácara Santo Antônio': 9,
+    'Capão Redondo': 10
 }
 
-# Listas para armazenar histórico de pesquisa de bairros e meses
+# Listas para armazenar histórico de pesquisa de bairros
 bairro_pesquisados = []
-meses_pesquisados = []
+bairro_pesquisados_alagados = []
 
 # Listas para armazenar histórico de notificações de bairros e causas
 notificacao_bairro = []
@@ -53,27 +60,29 @@ def consultar_bairro(bairro_user):
         bairro_user (str): O nome do bairro a ser consultado.
     """
     if bairro_user in bairros_alagados:
-        while True:
-            mes_user = input('Digite o nome do mês corrente (sem abreviação): ').capitalize()
+        if bairros_alagados[bairro_user] <= chuva_hoje:
             print('')
-            if mes_user in bairros_alagados[bairro_user]:
-                print(f'O bairro {bairro_user} tende a alagar no mês de {mes_user}. Tome cuidado!')
-                print('')
-                bairro_pesquisados.append(bairro_user)
-                meses_pesquisados.append(mes_user)
-                break
-            elif mes_user in demais_meses:
-                print(f'O bairro {bairro_user} não tende a alagar no mês de {mes_user}. Fique tranquilo!')
-                print('')
-                bairro_pesquisados.append(bairro_user)
-                meses_pesquisados.append(mes_user)
-                break
-            else:
-                traco()
-                print('Mês não encontrado, verifique se contém abreviação ou erro ortográfico')
-                traco()
-                print('')
+            traco()
+            print(f'O bairro {bairro_user} VAI ALAGAR hoje devido a fortes chuvas. Tome cuidado e evite a região!')
+            traco()
+            print('')
+            bairro_pesquisados_alagados.append(bairro_user)
+        elif (bairros_alagados[bairro_user]*0.75) <= chuva_hoje and bueiro_entupido == True:
+            print('')
+            traco()
+            print(f'O bairro {bairro_user} VAI ALAGAR hoje devido a fortes chuvas. Tome cuidado e evite a região!')
+            traco()
+            print('')
+            bairro_pesquisados_alagados.append(bairro_user)
+        else:
+            print('')
+            traco()
+            print(f'O bairro {bairro_user} NÃO vai alagar hoje, fique tranquilo!')
+            traco()
+            print('')
+            bairro_pesquisados.append(bairro_user)
     else:
+        print('')
         print('Bairro não encontrado, verifique se contém abreviação ou erro ortográfico')
         print('')
 
@@ -95,10 +104,9 @@ def consultar_bairros():
     """
     Função que permite ao usuário consultar bairros com maior risco de alagamento.
 
-    Esta função exibe um menu interativo que permite ao usuário consultar informações sobre bairros
-    que têm maior risco de alagamento durante meses de chuva intensa. O usuário pode selecionar um
+    Esta função exibe um menu interativo que permite ao usuário consultar bairros específicos para saber se eles vão alagar. O usuário pode selecionar um
     bairro para consultar e receber informações sobre o risco de alagamento naquele bairro durante
-    o mês atual.
+    o dia atual.
     """
     traco()
     print('Opção (1 - Consultar bairros com maior risco) escolhida!')
@@ -214,14 +222,18 @@ def sair():
             if not bairro_pesquisados and not notificacao_bairro:
                 sys.exit()
 
-            if bairro_pesquisados:
+            if bairro_pesquisados or bairro_pesquisados_alagados:
                 traco()
-                print(f'Pesquisas realizadas (bairro + mês): ')
+                print(f'Bairros pesquisados: ')
                 traco()
-                for bairro, meses in zip(bairro_pesquisados, meses_pesquisados):
-                    print(f'Bairro: {bairro}')
-                    print(f'Mês: {meses}')
-                    print('')
+                if bairro_pesquisados:
+                    for bairro in bairro_pesquisados:
+                        print(f'{bairro} não vai alagar!')
+                        print('')
+                if bairro_pesquisados_alagados:
+                    for bairro in bairro_pesquisados_alagados:
+                        print(f'{bairro} vai alagar!')
+                        print('')
 
             if notificacao_bairro:
                 traco()
