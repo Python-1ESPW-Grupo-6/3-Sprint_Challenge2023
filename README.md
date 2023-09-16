@@ -1,4 +1,4 @@
-# Challenge IBM - Sprint 3 - Grupo 6
+# Challenge IBM - Sprint 3 - Grupo 6 :rooster:
 
 - Fabrício Saavedra - 97631
 - Guilherme Akio - 98582
